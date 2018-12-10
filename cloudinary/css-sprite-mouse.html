@@ -2,15 +2,8 @@
     <head>
         <title>CSS Sprite and mouse event</title>
 
-        <link href="https://res.cloudinary.com/kanaxx/image/sprite/w_50/p_S_/capital.css" 
+        <link href="https://res.cloudinary.com/kanaxx/image/sprite/spritetest.css" 
         media="screen" rel="stylesheet" type="text/css" />
-
-        <!--css sprite 2つ目を追加-->
-        <link href="https://res.cloudinary.com/kanaxx/image/sprite/w_50/p_S_/lower.css" 
-        media="screen" rel="stylesheet" type="text/css" />
-        <!--jQueryも追加-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" 
-        integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
 
         <meta charset="utf-8"/>
 
@@ -18,43 +11,10 @@
     <body>
         <h1>CSS Sprite and mouse event</h1>
 
-        <div class='S_capital_a'></div>
-
-        <div class='S_capital_b'></div>
-
-        <div class='S_capital_c'></div>
-
-        <div class='S_capital_d'></div>
-
-        <div class='S_capital_e'></div>
+        <div class='number_1'></div>
 
         <hr>
         <a href="https://qiita.com/kanaxx/items/8d40ea2790803be3537a">CloudinaryでCSS Spriteをやってみる</a>
 
     </body>
 </html>
-
-<script>
-    $('div').hover(
-        function(e) {
-            result = $(this).attr('class').match(/S_capital_([abcde])/);
-            if(result!=null){
-                cls = result[0];
-                part = result[1];
-                newcls = 'S_lower_'+part;
-                console.log('%s,%s',cls, part);
-                $(this).removeClass(cls).addClass(newcls);
-            }
-        },
-        function(e) {
-            result = $(this).attr('class').match(/S_lower_([abcde])/);
-            if(result!=null){
-                cls = result[0];
-                part = result[1];
-                newcls = 'S_capital_'+part;
-                console.log('%s,%s',cls, part);
-                $(this).removeClass(cls).addClass(newcls);
-            }
-        },
-    );
-</script>
