@@ -1,10 +1,10 @@
 [
-    {"name":"user1", "namejp":"ゆーざいち", "site":"https://qiita.com/kanaxx/", "apiKey":"api no key"}
+    {"name":"user1", "namejp":"ゆーざいち", "apiKey":"api no key1"}
     ,
-    {"name":"user2", "namejp":"ゆーざに", "site":"https://qiita.com/kanaxx/", "apiKey":"api no key"}
+    {"name":"user2", "namejp":"ゆーざに", "apiKey":"api no key2"}
     ,
-    {"name":"user3", "namejp":"ゆーざ３", "site":"https://qiita.com/kanaxx/", "apiKey":"api no key"}
+    {"name":"user3", "namejp":"ゆーざ３", "apiKey":"api no key3"}
     ,
-    {"name":"NANASHI", "namejp":"ななしさん", "site":"https://qiita.com/kanaxx/", "apiKey":"api no key"}
+    {"name":"NANASHI", "namejp":"ななしさん", "apiKey":"api no key0"}
 
 ]
