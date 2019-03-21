@@ -4,4 +4,7 @@
     {"name":"user2", "namejp":"ゆーざに", "site":"https://qiita.com/kanaxx/", "apiKey":"api no key"}
     ,
     {"name":"user3", "namejp":"ゆーざ３", "site":"https://qiita.com/kanaxx/", "apiKey":"api no key"}
+    ,
+    {"name":"NANASHI", "namejp":"ななしさん", "site":"https://qiita.com/kanaxx/", "apiKey":"api no key"}
+
 ]
