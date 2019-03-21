@@ -1,4 +1,4 @@
-function showyournane(name){
+function showyourname(name){
     if( !name ){
         name = prompt('please input your name');
     }
