@@ -1,1 +1,263 @@
-i
+<html>
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="    crossorigin=""/>
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+        <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"     integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="     crossorigin=""></script>
+
+        <!-- Include Fuse.js for fuzzy search : http://kiro.me/projects/fuse.html -->
+        <script src="leaflet-fusesearch/src/fuse.js"></script>
+        <script src="leaflet-fusesearch/src/leaflet.fusesearch.js"></script>
+        <link rel="stylesheet" href="leaflet-fusesearch/src/leaflet.fusesearch.css" />
+    </head>
+
+    
+    <body>
+        <div id="map">
+        </div>
+        <style>
+        #map { height: 600px;width:600px; }
+        .tiny-popup {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            position: absolute;
+            box-sizing: border-box;
+
+            background: rgb(73, 66, 66);
+            border: solid 1px grey;
+            padding: 2px;
+
+            color: white;
+            font: 12px/14px Arial, Helvetica, sans-serif;
+            font-size: 1.1em;
+
+            box-shadow: 0 1px 4px rgba(0,0,0,0.65);
+            -webkit-border-radius: 4px;
+            border-radius: 4px;
+            
+            display: none;
+            opacity: 0.8;
+            z-index: 2000;
+            margin:10px;
+        }
+
+        .tiny-popup.visible {
+            display: inline-block;
+        }
+       </style>
+
+<script>
+    //シートの画像
+    var image = {
+        url:    'seatsample.png',
+        width:  1151,
+        height: 560
+    };
+    var bounds = L.latLngBounds(
+        [0, 0],
+        [image.height/5, image.width/5]
+    );
+
+    var map = L.map('map', {
+        crs: L.CRS.Simple,
+        maxBounds: bounds.pad(1)
+        ,zoom:0
+        ,maxZoom:5
+        ,minZoom:0
+    });
+    map.fitBounds(bounds);
+    L.imageOverlay(image.url, bounds).addTo(map);
+
+
+    function onMapClick(e) {
+        console.log(e.latlng);
+    }
+    map.on('click', onMapClick);
+
+    var seats = {
+        "A-1":[31, 85],
+        "A-2":[31, 53],
+        "A-3":[31, 23],
+        "B-1":[102,85],
+        "B-2":[102,53],
+        "B-3":[102,23],
+        "C-1":[173,85],
+        "C-2":[173,53],
+        "C-3":[173,23]
+    };
+
+    staffList = {
+        "A-1":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"090-000-0000"},
+        "A-2":{name:"千田一輝", empId:"s002", deptId:"dpt02", tel:"090-000-0000"},
+        "A-3":{name:"山崎年紀", empId:"s003", deptId:"dpt03", tel:"090-000-0000"},
+        "B-1":{name:"太田正勝", empId:"s004", deptId:"dpt01", tel:"090-000-0000"},
+        "B-2":{name:"中谷朱里", empId:"s005", deptId:"dpt02", tel:"090-000-0000"},
+        "B-3":{name:"南部遥華", empId:"s006", deptId:"dpt02", tel:"090-000-0000"},
+        "C-1":{name:"三橋義雄", empId:"s007", deptId:"dpt02", tel:"090-000-0000"},
+        "C-2":{name:"小沼咲雪菜", empId:"s008", deptId:"dpt01", tel:"090-000-0000"},
+        "C-3":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"090-000-0000"},
+    };
+
+    var deptList = {
+        dpt01 : {name: "開発部", icon:"small_star2_skyblue.png"},
+        dpt02 : {name: "営業部", icon:"money_yen_coin3.png"},
+        dpt03 : {name: "総務部", icon:"simple_leaf3.png"},
+    };
+
+    seatJson = {"type":"FeatureCollection","features":[]};
+    for( s in seats){
+        f = {"type":"Feature"};
+        f.id = s;
+        staff = staffList[s];
+        if(staff){
+            dept = deptList[staff.deptId];
+            staff.dept = dept;
+            f.properties = staff;
+        }
+        geo = {"type":"Point","coordinates":[]};
+        geo.coordinates=seats[s];
+        f.geometry = geo;
+        seatJson.features.push(f);
+    }
+
+    var setupIcons = function() {
+
+        var icons = {};
+        for (var dptId in deptList) {
+            var icon = deptList[dptId].icon;
+            var url = "icons/" + icon;
+    
+            var icon = L.icon({
+                iconUrl: url,
+                iconSize: [30, 30],
+                iconAnchor: [20, 20],
+                //iconAnchor: [16, 37],
+                popupAnchor: [0, -28]
+            });
+            icons[dptId] = icon;
+        }
+        return icons;
+    };
+
+    var layers = {},
+        cultureLayer = L.layerGroup(),
+        layerCtrl = L.control.layers();
+    for (var dptId in deptList) {
+        var layer = L.featureGroup();
+        layers[dptId] = layer;
+        cultureLayer.addLayer(layer);
+        
+        var dpt = deptList[dptId],
+            desc = '<img class="layer-control-img" src="icons/' + dpt.icon + '" width="20"> ' + dpt.name;
+        layerCtrl.addOverlay(layer, desc);
+    }
+    cultureLayer.addTo(map);
+    console.log(layers);
+
+    // L.control.infoPane('infopane', {position: 'bottomright'}).addTo(map);
+
+    var options = {
+        position: 'topright',
+        title: 'Chercher',
+        placeholder: 'ex: なまえ、部署名',
+        maxResultLength: 15,
+        threshold: 0.5,
+        showInvisibleFeatures: true,
+        showResultFct: function(feature, container) {
+            props = feature.properties;
+            var name = L.DomUtil.create('b', null, container);
+            name.innerHTML = props.name;
+
+            container.appendChild(L.DomUtil.create('br', null, container));
+
+            var cat = props.deptId,
+                info = '' + cat + ', ' + props.empId;
+            container.appendChild(document.createTextNode(info));
+        }
+    };
+    var fuseSearchCtrl = L.control.fuseSearch(options);
+    map.addControl(fuseSearchCtrl);
+
+    layerCtrl.addTo(map);
+
+    var icons = setupIcons();
+
+    displayFeatures(seatJson.features, layers, icons);
+    var props = ['name', 'empId', 'deptId', 'dept.name'];
+    fuseSearchCtrl.indexFeatures(seatJson.features, props);
+
+
+    function displayFeatures(features, layers, icons) {
+
+        var popup = L.DomUtil.create('div', 'tiny-popup', map.getContainer());
+        for (var id in features) {
+            var feat = features[id];
+            var cat = feat.properties.deptId;
+            var site = L.geoJson(feat, {
+                pointToLayer: function(feature, latLng) {
+                    var icon = icons[cat];
+                    var marker = L.marker(latLng, {
+                        icon: icon,
+                        keyboard: false,
+                        riseOnHover: true
+                    });
+                    if (! L.touch) {
+                        marker.on('mouseover', function(e) {
+                            var nom = e.target.feature.properties.name;
+                            popup.innerHTML = nom;
+                            var pos = map.latLngToContainerPoint(e.latlng);
+                            L.DomUtil.setPosition(popup, pos);
+                            L.DomUtil.addClass(popup, 'visible');
+                        }).on('mouseout', function(e) {
+                            L.DomUtil.removeClass(popup, 'visible');
+                        });
+                    }
+                    return marker;
+                },
+                onEachFeature: bindPopup
+            });
+            var layer = layers[cat];
+            if (layer !== undefined) {
+                layer.addLayer(site);
+            }
+        }
+        return layers;
+    }
+
+    function bindPopup(feature, layer) {
+        // Keep track of the layer(marker)
+        feature.layer = layer;
+
+        var props = feature.properties;
+        console.log(props);
+        if (props) {
+            var desc = '<span id="feature-popup">';
+            desc += '<strong>' + props.name + '</strong><br/>';
+
+            var dpt = deptList[props.deptId];
+            if (dpt !== null) {
+                desc += '<em>部署：' + dpt.name + '</em></br>';
+            }
+            
+            var tel = props.tel;
+            if (tel) {
+                desc += tel + '</br>';
+            }
+            // var url = props.web;
+            // if (url !== null) {
+            //     desc += '<a href="http://' + url + '" target=_blank>Site web</a></br>';
+            // }
+            
+            // var address = '' + props.adresse + ' ' + props.code_posta + ' ' + props.commune;
+            // desc += address + '<br/>';
+
+            // if (props.telephone) {
+            //     desc += 'Tel: ' + props.telephone + '<br/>';
+            // }
+            
+            desc += '</span>';
+            layer.bindPopup(desc);
+        }
+    }
+</script>
+    </body>
+</html>
