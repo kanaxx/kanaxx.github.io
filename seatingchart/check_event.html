@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+   crossorigin=""/>
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+    crossorigin=""></script>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <style>
+        #map { height: 600px;width:600px; }
+        .leaflet-control-attribution {display:none;}
+        </style>
+
+<script>
+    var image = {
+        url:    'seatsample.png',
+        width:  1151,
+        height: 560
+    };
+    var bounds = L.latLngBounds(
+        [0, 0],
+        [image.height, image.width]
+    );
+
+    var map = L.map('map', {
+        crs: L.CRS.Simple,
+        maxBounds: bounds.pad(1)
+        ,zoom:0 ,maxZoom:5 ,minZoom:-10
+    });
+
+    map.fitBounds(bounds);
+    L.imageOverlay(image.url, bounds).addTo(map);
+
+
+    function showClickEvent(e) {
+        console.log('(%s,%s) | [%s,%s]', 
+            e.containerPoint.x, e.containerPoint.y, 
+            e.latlng.lat, e.latlng.lng);
+    }
+
+    function onZoom(e){
+        console.log(e.sourceTarget._zoom);
+    }
+    map.on('click', showClickEvent).on('zoomend', onZoom);
+
+</script>
+    </body>
+</html>
