@@ -44,9 +44,9 @@
 
 
     function showClickEvent(e) {
-        console.log('(%s,%s) | [%s,%s]', 
+        console.log('pixel (%s, %s) | LatLng [%s, %s] | geojson [%s, %s]', 
             e.containerPoint.x, e.containerPoint.y, 
-            e.latlng.lat, e.latlng.lng);
+            e.latlng.lat, e.latlng.lng,e.latlng.lng, e.latlng.lat );
     }
 
     function onZoom(e){
