@@ -1,5 +1,6 @@
 <html>
     <head>
+        <title>leafletで座席表</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="    crossorigin=""/>
         <!-- Make sure you put this AFTER Leaflet's CSS -->
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"     integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="     crossorigin=""></script>
@@ -14,6 +15,9 @@
     <body>
         <div id="map">
         </div>
+        <hr>
+        <a href="https://qiita.com/kanaxx/items/c846c049af46ae4cdac3">Qiita記事に戻る</a>
+
         <style>
         #map { height: 600px;width:600px; }
         .tiny-popup {
@@ -52,18 +56,20 @@
         width:  1151,
         height: 560
     };
+
     var bounds = L.latLngBounds(
         [0, 0],
-        [image.height/5, image.width/5]
+        [image.height, image.width]
     );
 
     var map = L.map('map', {
         crs: L.CRS.Simple,
         maxBounds: bounds.pad(1)
-        ,zoom:0
+        ,zoom:-1
         ,maxZoom:5
-        ,minZoom:0
+        ,minZoom:-1
     });
+    
     map.fitBounds(bounds);
     L.imageOverlay(image.url, bounds).addTo(map);
 
@@ -74,30 +80,31 @@
     map.on('click', onMapClick);
 
     var seats = {
-        "A-1":[31, 85],
-        "A-2":[31, 53],
-        "A-3":[31, 23],
-        "B-1":[102,85],
-        "B-2":[102,53],
-        "B-3":[102,23],
-        "C-1":[173,85],
-        "C-2":[173,53],
-        "C-3":[173,23]
-    };
+        "A-1":[144,424],
+        "A-2":[144,270],
+        "A-3":[144,116],
+        "B-1":[504,426],
+        "B-2":[504,274],
+        "B-3":[504,116],
+        "C-1":[864,428],
+        "C-2":[864,270],
+        "C-3":[864,116]
+    }
 
-    staffList = {
+    var staffList = {
         "A-1":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"090-000-0000"},
         "A-2":{name:"千田一輝", empId:"s002", deptId:"dpt02", tel:"090-000-0000"},
         "A-3":{name:"山崎年紀", empId:"s003", deptId:"dpt03", tel:"090-000-0000"},
         "B-1":{name:"太田正勝", empId:"s004", deptId:"dpt01", tel:"090-000-0000"},
         "B-2":{name:"中谷朱里", empId:"s005", deptId:"dpt02", tel:"090-000-0000"},
         "B-3":{name:"南部遥華", empId:"s006", deptId:"dpt02", tel:"090-000-0000"},
-        "C-1":{name:"三橋義雄", empId:"s007", deptId:"dpt02", tel:"090-000-0000"},
+        // "C-1":{name:"三橋義雄", empId:"s007", deptId:"dpt02", tel:"090-000-0000"},
         "C-2":{name:"小沼咲雪菜", empId:"s008", deptId:"dpt01", tel:"090-000-0000"},
         "C-3":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"090-000-0000"},
     };
 
     var deptList = {
+        dpt00 : {name: "空き", icon:"checkbox_unchecked.png"},
         dpt01 : {name: "開発部", icon:"small_star2_skyblue.png"},
         dpt02 : {name: "営業部", icon:"money_yen_coin3.png"},
         dpt03 : {name: "総務部", icon:"simple_leaf3.png"},
@@ -107,25 +114,31 @@
     for( s in seats){
         f = {"type":"Feature"};
         f.id = s;
+
+        geo = {"type":"Point","coordinates":[]};
+        geo.coordinates=seats[s];
+        f.geometry = geo;
+
         staff = staffList[s];
         if(staff){
             dept = deptList[staff.deptId];
             staff.dept = dept;
             f.properties = staff;
+        }else{
+            staff = {};
+            staff.name = '空き';
+            staff.deptId = 'dpt00';
+            staff.dept = deptList['dpt00'];
+            f.properties = staff;
         }
-        geo = {"type":"Point","coordinates":[]};
-        geo.coordinates=seats[s];
-        f.geometry = geo;
         seatJson.features.push(f);
     }
 
     var setupIcons = function() {
-
         var icons = {};
         for (var dptId in deptList) {
             var icon = deptList[dptId].icon;
             var url = "icons/" + icon;
-    
             var icon = L.icon({
                 iconUrl: url,
                 iconSize: [30, 30],
@@ -139,62 +152,70 @@
     };
 
     var layers = {},
-        cultureLayer = L.layerGroup(),
+        allDeptLayer = L.layerGroup(),
         layerCtrl = L.control.layers();
+
     for (var dptId in deptList) {
         var layer = L.featureGroup();
         layers[dptId] = layer;
-        cultureLayer.addLayer(layer);
+        allDeptLayer.addLayer(layer);
         
+        //検索パネル用
         var dpt = deptList[dptId],
             desc = '<img class="layer-control-img" src="icons/' + dpt.icon + '" width="20"> ' + dpt.name;
         layerCtrl.addOverlay(layer, desc);
     }
-    cultureLayer.addTo(map);
-    console.log(layers);
+    layerCtrl.addTo(map);
+    allDeptLayer.addTo(map);
 
+    var icons = setupIcons();
+    displayFeatures(seatJson.features, layers, icons);
+    
+    // console.log(layers);
     // L.control.infoPane('infopane', {position: 'bottomright'}).addTo(map);
 
     var options = {
         position: 'topright',
-        title: 'Chercher',
-        placeholder: 'ex: なまえ、部署名',
+        title: '検索',
+        placeholder: '社員名、部署名',
         maxResultLength: 15,
         threshold: 0.5,
         showInvisibleFeatures: true,
         showResultFct: function(feature, container) {
+
+            //検索結果に表示する内容を決める
+            //geojsonのfeatureとcontainerが渡されるので頑張って組み立てる
             props = feature.properties;
             var name = L.DomUtil.create('b', null, container);
             name.innerHTML = props.name;
-
             container.appendChild(L.DomUtil.create('br', null, container));
-
-            var cat = props.deptId,
-                info = '' + cat + ', ' + props.empId;
+            var info = '' + props.dept.name + ', ' + props.empId;
             container.appendChild(document.createTextNode(info));
         }
     };
     var fuseSearchCtrl = L.control.fuseSearch(options);
-    map.addControl(fuseSearchCtrl);
-
-    layerCtrl.addTo(map);
-
-    var icons = setupIcons();
-
-    displayFeatures(seatJson.features, layers, icons);
+    
     var props = ['name', 'empId', 'deptId', 'dept.name'];
     fuseSearchCtrl.indexFeatures(seatJson.features, props);
+    map.addControl(fuseSearchCtrl);
+
+
+    console.log('==end==');
 
 
     function displayFeatures(features, layers, icons) {
 
+        //div.tiny-popupを作る（マウスオーバーした時に見えるやつ）
         var popup = L.DomUtil.create('div', 'tiny-popup', map.getContainer());
+
         for (var id in features) {
             var feat = features[id];
-            var cat = feat.properties.deptId;
+            var dptId = feat.properties.deptId;
+
+            //座席を地図上にポイントするのはL.geoJsonを呼び出すだけ
             var site = L.geoJson(feat, {
                 pointToLayer: function(feature, latLng) {
-                    var icon = icons[cat];
+                    var icon = icons[dptId];
                     var marker = L.marker(latLng, {
                         icon: icon,
                         keyboard: false,
@@ -213,9 +234,9 @@
                     }
                     return marker;
                 },
-                onEachFeature: bindPopup
+                onEachFeature: onEachFeature
             });
-            var layer = layers[cat];
+            var layer = layers[dptId];
             if (layer !== undefined) {
                 layer.addLayer(site);
             }
@@ -223,20 +244,21 @@
         return layers;
     }
 
-    function bindPopup(feature, layer) {
+    function onEachFeature(feature, layer) {
         // Keep track of the layer(marker)
         feature.layer = layer;
 
         var props = feature.properties;
-        console.log(props);
         if (props) {
             var desc = '<span id="feature-popup">';
             desc += '<strong>' + props.name + '</strong><br/>';
 
-            var dpt = deptList[props.deptId];
-            if (dpt !== null) {
-                desc += '<em>部署：' + dpt.name + '</em></br>';
-            }
+            // var dpt = deptList[props.deptId];
+            // if (dpt !== null) {
+            //     desc += '<em>部署：' + dpt.name + '</em></br>';
+            // }
+            desc += '<em>部署：' + props.dept.name + '</em></br>'
+            
             
             var tel = props.tel;
             if (tel) {
@@ -245,13 +267,6 @@
             // var url = props.web;
             // if (url !== null) {
             //     desc += '<a href="http://' + url + '" target=_blank>Site web</a></br>';
-            // }
-            
-            // var address = '' + props.adresse + ' ' + props.code_posta + ' ' + props.commune;
-            // desc += address + '<br/>';
-
-            // if (props.telephone) {
-            //     desc += 'Tel: ' + props.telephone + '<br/>';
             // }
             
             desc += '</span>';
