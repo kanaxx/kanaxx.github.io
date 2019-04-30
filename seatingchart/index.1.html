@@ -215,19 +215,9 @@
             //座席を地図上にポイントするのはL.geoJsonを呼び出すだけ
             var site = L.geoJson(feat, {
                 pointToLayer: function(feature, latLng) {
-                    var photo = icons[dptId];
-                    //社員番号が取れる場合＝空き席ではない場合は、photoフォルダから社員ID.pngを取り出す
-                    if(feature.properties.empId){
-                        photo = L.icon({
-                            iconUrl: 'photo/' + feature.properties.empId + '.png',
-                            iconSize: [30, 30],
-                            iconAnchor: [20, 20],
-                            //iconAnchor: [16, 37],
-                            popupAnchor: [0, -30]
-                        });
-                    }
+                    var icon = icons[dptId];
                     var marker = L.marker(latLng, {
-                        icon: photo,
+                        icon: icon,
                         keyboard: false,
                         riseOnHover: true
                     });
