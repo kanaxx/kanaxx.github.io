@@ -66,18 +66,13 @@
         crs: L.CRS.Simple,
         maxBounds: bounds.pad(1)
         ,zoom:-1
-        ,maxZoom:5
-        ,minZoom:-1
+        ,maxZoom:1
+        ,minZoom:-2
     });
     
     map.fitBounds(bounds);
     L.imageOverlay(image.url, bounds).addTo(map);
-
-
-    function onMapClick(e) {
-        console.log(e.latlng);
-    }
-    map.on('click', onMapClick);
+    map.on('click', onMapClick).on('zoomend', onZoom);
 
     var seats = {
         "A-1":[144,424],
@@ -92,15 +87,15 @@
     }
 
     var staffList = {
-        "A-1":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"090-000-0000"},
-        "A-2":{name:"千田一輝", empId:"s002", deptId:"dpt02", tel:"090-000-0000"},
-        "A-3":{name:"山崎年紀", empId:"s003", deptId:"dpt03", tel:"090-000-0000"},
-        "B-1":{name:"太田正勝", empId:"s004", deptId:"dpt01", tel:"090-000-0000"},
-        "B-2":{name:"中谷朱里", empId:"s005", deptId:"dpt02", tel:"090-000-0000"},
-        "B-3":{name:"南部遥華", empId:"s006", deptId:"dpt02", tel:"090-000-0000"},
+        "A-1":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"090-1111-1212"},
+        "A-2":{name:"千田一輝", empId:"s002", deptId:"dpt02", tel:"090-2222-2121"},
+        "A-3":{name:"山崎年紀", empId:"s003", deptId:"dpt03", tel:"090-3333-0000"},
+        "B-1":{name:"太田正勝", empId:"s004", deptId:"dpt01", tel:"090-4444-0000"},
+        "B-2":{name:"中谷朱里", empId:"s005", deptId:"dpt02", tel:"090-5555-0000"},
+        "B-3":{name:"南部遥華", empId:"s006", deptId:"dpt02", tel:"080-1111-3456"},
         // "C-1":{name:"三橋義雄", empId:"s007", deptId:"dpt02", tel:"090-000-0000"},
-        "C-2":{name:"小沼咲雪菜", empId:"s008", deptId:"dpt01", tel:"090-000-0000"},
-        "C-3":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"090-000-0000"},
+        "C-2":{name:"小沼咲雪菜", empId:"s008", deptId:"dpt01", tel:"080-2222-2345"},
+        "C-3":{name:"長島太翼", empId:"s001", deptId:"dpt01", tel:"080-3333-1234"},
     };
 
     var deptList = {
@@ -141,9 +136,7 @@
             var url = "icons/" + icon;
             var icon = L.icon({
                 iconUrl: url,
-                iconSize: [30, 30],
-                iconAnchor: [20, 20],
-                //iconAnchor: [16, 37],
+                iconSize: iconsize(),
                 popupAnchor: [0, -28]
             });
             icons[dptId] = icon;
@@ -169,7 +162,7 @@
     allDeptLayer.addTo(map);
 
     var icons = setupIcons();
-    displayFeatures(seatJson.features, layers, icons);
+    var markers = displayFeatures(seatJson.features, layers, icons);
     
     // console.log(layers);
     // L.control.infoPane('infopane', {position: 'bottomright'}).addTo(map);
@@ -177,7 +170,7 @@
     var options = {
         position: 'topright',
         title: '検索',
-        placeholder: '社員名、部署名',
+        placeholder: '社員名、部署名、TEL',
         maxResultLength: 15,
         threshold: 0.5,
         showInvisibleFeatures: true,
@@ -189,24 +182,53 @@
             var name = L.DomUtil.create('b', null, container);
             name.innerHTML = props.name;
             container.appendChild(L.DomUtil.create('br', null, container));
-            var info = '' + props.dept.name + ', ' + props.empId;
+            var info = props.dept.name + ' / ' + props.tel + ' / ' + props.empId;
             container.appendChild(document.createTextNode(info));
         }
     };
     var fuseSearchCtrl = L.control.fuseSearch(options);
     
-    var props = ['name', 'empId', 'deptId', 'dept.name'];
+    var props = ['name', 'empId', 'deptId', 'dept.name', 'tel'];
     fuseSearchCtrl.indexFeatures(seatJson.features, props);
     map.addControl(fuseSearchCtrl);
 
 
     console.log('==end==');
 
+    function onMapClick(e) {
+        console.log(e.latlng);
+    }
+    
+    function iconsize(x){
+        if( x == -2 ){ return [15,15]; }
+        if( x == -1 ){ return [30,30]; }
+        if( x == 0 ){ return [60,60]; }
+        if( x == 1 ){ return [150,150]; }
+        return [30,30];
+    }
+
+    function onZoom(e){
+        z = map.getZoom();
+        // console.log(z);
+        newsize = iconsize(z);
+        for( m in markers){
+            marker = markers[m];
+            src = marker._icon.currentSrc;
+            
+            var icon = L.icon({
+                iconUrl: src,
+                iconSize: newsize,
+                popupAnchor: [0, -10]
+            });
+            marker.setIcon(icon);
+        }
+    }
 
     function displayFeatures(features, layers, icons) {
 
         //div.tiny-popupを作る（マウスオーバーした時に見えるやつ）
         var popup = L.DomUtil.create('div', 'tiny-popup', map.getContainer());
+        var markers = [];
 
         for (var id in features) {
             var feat = features[id];
@@ -220,9 +242,8 @@
                     if(feature.properties.empId){
                         photo = L.icon({
                             iconUrl: 'photo/' + feature.properties.empId + '.png',
-                            iconSize: [30, 30],
+                            iconSize: iconsize(),
                             iconAnchor: [20, 20],
-                            //iconAnchor: [16, 37],
                             popupAnchor: [0, -30]
                         });
                     }
@@ -231,6 +252,8 @@
                         keyboard: false,
                         riseOnHover: true
                     });
+                    markers.push(marker);
+
                     if (! L.touch) {
                         marker.on('mouseover', function(e) {
                             var nom = e.target.feature.properties.name;
@@ -251,7 +274,7 @@
                 layer.addLayer(site);
             }
         }
-        return layers;
+        return markers;
     }
 
     function onEachFeature(feature, layer) {
@@ -262,22 +285,12 @@
         if (props) {
             var desc = '<span id="feature-popup">';
             desc += '<strong>' + props.name + '</strong><br/>';
-
-            // var dpt = deptList[props.deptId];
-            // if (dpt !== null) {
-            //     desc += '<em>部署：' + dpt.name + '</em></br>';
-            // }
             desc += '<em>部署：' + props.dept.name + '</em></br>'
-            
             
             var tel = props.tel;
             if (tel) {
                 desc += tel + '</br>';
             }
-            // var url = props.web;
-            // if (url !== null) {
-            //     desc += '<a href="http://' + url + '" target=_blank>Site web</a></br>';
-            // }
             
             desc += '</span>';
             layer.bindPopup(desc);
