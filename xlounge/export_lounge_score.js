@@ -69,7 +69,7 @@ export default () => {
       if( confirm('以前のスコアが残っていますがクリアしますか？') ){
         localStorage.removeItem(keyOfScore);
       }else{
-        setQuestionNo(previous.length);
+        setQuestionNo(previous.length+1);
       }
     }
   }
