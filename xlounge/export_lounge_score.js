@@ -54,7 +54,7 @@ export default () => {
       $('#saiten').on('click',saiten);
       $('#save_score').on('click',saveScore);
       $('#show_score').on('click',showScore);
-      $('button:contains("回答クリア")').on('click', setNextQuestionNo);
+      $('button:contains("回答クリア")').on('click', prepareNextQuestion);
       $('button:contains("正解発表")').on('click', saveScore);
       $('#modal-scoreboard').on("click", function() {
         $(this).parents().find('.modal').removeClass('is-active');
@@ -73,7 +73,9 @@ export default () => {
       }
     }
   }
-
+  function prepareNextQuestion(){
+    setQuestionNo(getQuestionNo()+1);
+  }
   function saveScore(){
     console.log('save');
     let point = parsePositiveInt($('#_question_point').val());
@@ -148,9 +150,6 @@ export default () => {
   }
   function getQuestionNo(){
     return parsePositiveInt($('#_question_no').val());
-  }
-  function setNextQuestionNo(){
-    setQuestionNo(getQuestionNo()+1);
   }
   function setQuestionNo(no){
     $('#_question_no').val(no);
