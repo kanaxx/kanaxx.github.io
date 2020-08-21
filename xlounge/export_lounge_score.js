@@ -150,7 +150,7 @@ export default () => {
     return parsePositiveInt($('#_question_no').val());
   }
   function setNextQuestionNo(){
-    setNextQuestionNo(getQuestionNo()+1);
+    setQuestionNo(getQuestionNo()+1);
   }
   function setQuestionNo(no){
     $('#_question_no').val(no);
