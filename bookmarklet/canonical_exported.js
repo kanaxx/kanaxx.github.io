@@ -1,4 +1,4 @@
-export bookmarklet () => {
+export default () => {
   let title = document.title;
   let href = document.location.href;
   let canonical = get_canonical();
