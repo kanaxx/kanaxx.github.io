@@ -1,0 +1,58 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+</head>
+<body>
+  <h1>楽天のランキングをコンテンツ化するページ</h1>
+
+  <h2>1. APIの結果を埋め込むHTMLのテンプレートを入力</h2>
+  <div  style="padding:10px">
+    <textarea id="html-template" cols="130" rows="20" style="height:200px">
+    <div id="rakuten-aff-parts">
+      <h3>楽天市場のリアルタイムランキング</h3>
+      <p>最終更新日：<span class="raku_lastBuildDate"></span></p>
+      <div class="rakuten-aff-item" style="display:none;border:black solid 3px;margin-bottom:5px;padding:5px">
+        <span><span class="raku_rank"></span> 位</span><br>
+        <span><span class="raku_itemPrice"></span> 円</span><br>
+        <a href="" class="raku_affiliateUrl">
+          <img src="" class="raku_mediumImageUrls" style="float:left"> <span class="raku_itemName"></span>
+        </a>
+        <br style="clear: left;">
+      </div>
+    </div>
+    </textarea>
+  </div>
+
+  <h2>2. ジャンルと取得件数を設定</h2>
+  <div id="rakuten-aff-config" style="padding:10px">
+    ジャンルID：<input type="text" name="genreId" value="564895"><br>
+    取得件数：<input type="text" name="display" value="10"><br>
+    
+    <input type="hidden" name="applicationId" value="1027300763038019149"> <input type="hidden" name="affiliateId" value="04021205.0d23044c.04021206.437bb859"><br>
+    <button id="btn" onclick="btn();"> 生成する</button>
+
+  </div>
+
+
+  <hr>
+
+  <h2>3. リアルタイムランキングの結果を出力</h2>
+  <div id="result">
+    <div id="rakuten-aff-parts"></div>
+  </div>
+
+</body>
+
+<script src="./ranking-generator.js"></script>
+<script>
+  function btn(){
+    let html = document.getElementById('html-template');
+    console.log(html.value);
+    let result = document.getElementById('result');
+    console.log(result);
+    result.innerHTML = html.value;
+    showRakutenAffItems();
+  }
+</script>
+
+</html>
