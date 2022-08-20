@@ -1,17 +1,30 @@
 <html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
 
+</head>
 <body>
   リアルタイムランキングを取得するサンプル<br>
 
   <div id="rakuten-aff-parts">
     <h3>楽天市場のリアルタイムランキング</h3>
+    ランキング更新日：<b class="raku_lastBuildDate"></b><br>
     <div class="rakuten-aff-item" style="display:none">
-      <span><span class="raku_rank"></span> 位</span><br>
-      <span><span class="raku_itemPrice"></span> 円</span><br>
-      <a href="" class="raku_affiliateUrl">
-        <img src="" class="raku_mediumImageUrls" style="float:left"> <span class="raku_itemName"></span>
-      </a>
-      <br style="clear: left;">
+
+      <h2>順位：<span class="raku_rank"></span> 位</span></h2>
+      <img src="" class="raku_mediumImageUrls"><img src="" class="raku_smallImageUrls">
+      <li>価格：<span class="raku_itemPrice"></span> 円</li>
+
+      <li>ポイント倍率：<span class="raku_pointRate"></span>倍</li>
+      <li>商品名：<span class="raku_itemName"></span></li>
+      <li>商品URL：<a class="raku_itemUrl"><span class="raku_itemUrl"></span></a> </li>
+      
+      <li>商品コード：<span class="raku_itemCode"></span></li>
+      <li>レビュー数：<span class="raku_reviewCount"></span></li>
+      <li>レビュー平均点：<span class="raku_reviewAverage"></span> </li>
+      <li>ショップコード：<span class="raku_shopCode"></span></li>
+      <li>ショップURL：<a class="raku_shopUrl"><span class="raku_shopUrl"></span></a> </li>
+      
     </div>
   </div>
 

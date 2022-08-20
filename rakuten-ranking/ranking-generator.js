@@ -1,8 +1,9 @@
 // author kanaxx.
+  const affiliateId = "04021205.0d23044c.04021206.437bb859";
+  const applicationId = "1027300763038019149";
+
   let r10AffConfig = null;
   let r10AffParts = null;
-  const applicationId = "1027300763038019149";
-  const affiliateId = "04021205.0d23044c.04021206.437bb859";
   const r10ApiUrl = 'https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&formatVersion=2';
   const defaultConfig = {display:10, period:"realtime", applicationId, affiliateId};
 
@@ -115,20 +116,26 @@
         let e = null;
 
         //link
-        if(href = r10Items[i]['affiliateUrl']){
-          if( e = html.querySelector('.raku_affiliateUrl') ){
-            e.setAttribute('href', href);
+        ['affiliateUrl','itemUrl','shopUrl'].forEach(n=>{
+          if(href = r10Items[i][n]){
+            if( e = html.querySelector(`a.raku_${n}`) ){
+              e.setAttribute('href', href);
+            }
           }
-        }
+        });
+        
         //img
-        if(src = r10Items[i]['mediumImageUrls']){
-          if( e = html.querySelector('.raku_mediumImageUrls')){
-            e.setAttribute('src', src[0]);
+        ['mediumImageUrls','smallImageUrls'].forEach(n=>{
+          if(src = r10Items[i][n]){
+            if( e = html.querySelector(`img.raku_${n}`)){
+              e.setAttribute('src', src[0]);
+            }
           }
-        }
+        });
+        
         //other
         for(let name in r10Items[i]){
-          if( e = html.querySelector('span.raku_' + name) ){
+          if( e = html.querySelector(`span.raku_${name}`) ){
             e.innerHTML = r10Items[i][name];
           }
         }
