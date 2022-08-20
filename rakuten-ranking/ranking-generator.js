@@ -1,11 +1,12 @@
 // author kanaxx.
   const affiliateId = "04021205.0d23044c.04021206.437bb859";
+  const display=10;
   const applicationId = "1027300763038019149";
 
   let r10AffConfig = null;
   let r10AffParts = null;
   const r10ApiUrl = 'https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&formatVersion=2';
-  const defaultConfig = {display:10, period:"realtime", applicationId, affiliateId};
+  const defaultConfig = {period:"realtime", display, applicationId, affiliateId};
 
   window.addEventListener("load", () => {
     if( r10AffParts ){
@@ -61,7 +62,7 @@
 
   function checkRakutenAffItemsArea(trigger){
     targetTop = trigger.getBoundingClientRect().top;
-    console.log('div=%s, windows=%s', targetTop, window.innerHeight);
+    //console.log('div=%s, windows=%s', targetTop, window.innerHeight);
     return (targetTop <= window.innerHeight);
   }
 
