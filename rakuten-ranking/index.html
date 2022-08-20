@@ -7,10 +7,8 @@
   <h1>楽天のランキングをコンテンツ化するページ</h1>
   楽天のリアルタイムランキングを参照し、ブログに埋め込むパーツ生成するJavaScriptのテストページです。<br>
   HTMLの貼り付けて生成ボタンを押すと、HTMLにランキングデータを埋め込むことができます。<br>
-  作った経緯はブログに書いてあります。使い方はGithubに書きます。
-  <li><a href="https://kanaxx.hatenablog.jp/entry/realtime-ranking-parts">ブログページ</a></li>
-  <li><a href="https://github.com/kanaxx/hatenablog-omocha/tree/main/rakuten-ranking">GitHub</a></li>
-
+  作った経緯は[ブログ](https://kanaxx.hatenablog.jp/entry/realtime-ranking-parts)に書いてあります。使い方はGithub(https://github.com/kanaxx/hatenablog-omocha/tree/main/rakuten-ranking)に書きます。
+  
   <h2>1. APIの結果を埋め込むHTMLのテンプレートを入力</h2>
   <div  style="padding:10px">
     <textarea id="html-template" cols="130" rows="20" style="height:200px">
@@ -31,7 +29,7 @@
 
   <h2>2. ジャンルと取得件数を設定</h2>
   <div id="rakuten-aff-config" style="padding:10px">
-    楽天のジャンルID：<input type="text" name="genreId" value="564895"><br>
+    楽天のジャンルID(数値6桁)：<input type="text" name="genreId" value="564895"><br>
     取得件数（1-30）：<input type="text" name="display" value="10"><br>
     
     <input type="hidden" name="applicationId" value="1027300763038019149"> <input type="hidden" name="affiliateId" value="04021205.0d23044c.04021206.437bb859"><br>
