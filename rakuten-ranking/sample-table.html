@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ランキング：テーブルのサンプル</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+<div class="content">
+
+  <h1>リアルタイムランキングを取得するサンプル</h1>
+
+  <div id="rakuten-aff-parts">
+    <h3>楽天市場のリアルタイムランキング</h3>
+    ランキング更新日：<b data-raku="lastBuildDate"></b>
+
+    <table class="table is-bordered">
+      <tr>
+        <th>順位</th><th>名前</th>
+        <th>画像</th><th>価格</th>
+        <th>ポイント倍率</th>
+        <th>レビュー数</th>
+        <th>レビュー平均</th>
+        <th>商品コード・URL</th><th>ショップコード・URL</th>
+      </tr>
+
+      <tr class="rakuten-aff-item">
+        <td><span data-raku="rank"></span> </td>
+        <td><span data-raku="itemName"></span></td>
+        <td><img src="" data-raku="mediumImageUrls"><img src="" data-raku="smallImageUrls"></td>
+        <td><span data-raku="itemPrice"></span> 円</td>
+        <td><span data-raku="pointRate"></span>倍</td>
+        <td><span data-raku="reviewCount"></span></td>
+        <td><span data-raku="reviewAverage"></span> </td>
+        <td><a data-raku="itemUrl"><span data-raku="itemCode"></span></a> </td>
+        <td><a data-raku="shopUrl"><span data-raku="shopCode"></span></a> </td>
+      </tr>
+    </table>
+
+    aaa
+  </div>
+
+  <div id="rakuten-aff-config">
+    <input type="hidden" name="applicationId" value="1027300763038019149"> 
+    <input type="hidden" name="affiliateId" value="04021205.0d23044c.04021206.437bb859">
+    <input type="hidden" name="genreId" value="510915">
+    <input type="hidden" name="display" value="30">
+  </div>
+
+</div>
+</body>
+
+<script src="./ranking-generator.js"></script>
+
+</html>

@@ -1,0 +1,43 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+  <title>ブログサイドバー風サンプル</title>
+</head>
+<body>
+  <h1>リアルタイムランキングを取得するサンプル</h1>
+
+
+  <div id="rakuten-aff-parts" style="width:300px;">
+    <h3>スイーツ売れ筋</h3>
+    ランキング更新日：<b data-raku="lastBuildDate"></b><br>
+
+    <div class="rakuten-aff-item" style="padding-bottom: 10px; border-bottom: thick double #32a1ce;">
+      <div style="font-size:130%;text-decoration: underline;"><b>順位：</b><span data-raku="rank"></span> 位</span></div>
+      <a data-raku="itemUrl">
+      <img src="" data-raku="smallImageUrls" style="float: left; padding:15px;">
+      <div><span data-raku="itemName" style="font-size:75%"></span></div>
+      <div style="clear: left;">価格：<span data-raku="itemPrice"></span> 円</div>
+      </a>
+    </div>
+  </div>
+
+  <div id="rakuten-aff-config">
+    <input type="hidden" name="applicationId" value="1027300763038019149"> 
+    <input type="hidden" name="affiliateId" value="04021205.0d23044c.04021206.437bb859">
+    <input type="hidden" name="genreId" value="100283">
+    <input type="hidden" name="display" value="30">
+  </div>
+
+  <style>
+    div.itemName {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+  </style>
+</body>
+
+<script src="./ranking-generator.js"></script>
+
+</html>

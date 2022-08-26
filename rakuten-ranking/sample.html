@@ -1,31 +1,32 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
-
+  <title>データ取得サンプル</title>
 </head>
 <body>
-  リアルタイムランキングを取得するサンプル<br>
-
+  <h1>リアルタイムランキングを取得するサンプル</h1>
+  
   <div id="rakuten-aff-parts">
     <h3>楽天市場のリアルタイムランキング</h3>
-    ランキング更新日：<b class="raku_lastBuildDate"></b><br>
-    <div class="rakuten-aff-item" style="display:none">
+    ランキング更新日：<b data-raku="lastBuildDate"></b><br>
 
-      <h2>順位：<span class="raku_rank"></span> 位</span></h2>
-      <img src="" class="raku_mediumImageUrls"><img src="" class="raku_smallImageUrls">
-      <li>価格：<span class="raku_itemPrice"></span> 円</li>
+    <div class="rakuten-aff-item" >
+      <h2>順位：<span data-raku="rank"></span> 位</span></h2>
+      <img src="" data-raku="mediumImageUrls"><img src="" data-raku="smallImageUrls">
+      <li>価格：<span data-raku="itemPrice"></span> 円</li>
 
-      <li>ポイント倍率：<span class="raku_pointRate"></span>倍</li>
-      <li>商品名：<span class="raku_itemName"></span></li>
-      <li>商品URL：<a class="raku_itemUrl"><span class="raku_itemUrl"></span></a> </li>
+      <li>ポイント倍率：<span data-raku="pointRate"></span>倍</li>
+      <li>商品名：<span data-raku="itemName"></span></li>
+      <li>商品URL：<a data-raku="itemUrl"><span data-raku="itemUrl"></span></a> </li>
       
-      <li>商品コード：<span class="raku_itemCode"></span></li>
-      <li>レビュー数：<span class="raku_reviewCount"></span></li>
-      <li>レビュー平均点：<span class="raku_reviewAverage"></span> </li>
-      <li>ショップコード：<span class="raku_shopCode"></span></li>
-      <li>ショップURL：<a class="raku_shopUrl"><span class="raku_shopUrl"></span></a> </li>
-      
+      <li>商品コード：<span data-raku="itemCode"></span></li>
+      <li>レビュー数：<span data-raku="reviewCount"></span></li>
+      <li>レビュー平均点：<span data-raku="reviewAverage"></span> </li>
+      <li>ショップコード：<span data-raku="shopCode"></span></li>
+      <li>ショップURL：<a data-raku="shopUrl"><span data-raku="shopUrl"></span></a> </li>
     </div>
+
+    フッター部分
   </div>
 
   <div id="rakuten-aff-config">
