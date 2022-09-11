@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta charset="UTF8">
+    <title>レガシーなラジオボタンを改善する</title>
+
+  </head>
+  <body>
+    <h1>レガシーなラジオボタン9個</h1>
+    <span style="color:red">○しか押せないラジオです。いらっとします</span>
+    <div style="margin:15px">
+      <table>
+        <tr>
+          <td><input type="radio" name="radio1" value="1">：選択肢１</td>
+          <td><input type="radio" name="radio1" value="2">：選択肢２</td>
+          <td><input type="radio" name="radio1" value="3">：選択肢３</td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="radio2" value="1">：選択肢１</td>
+          <td><input type="radio" name="radio2" value="2">：選択肢２</td>
+          <td><input type="radio" name="radio2" value="3">：選択肢３</td>
+        </tr>
+        <tr>
+          <td><input type="radio" name="radio3" value="1">：選択肢１</td>
+          <td><input type="radio" name="radio3" value="2">：選択肢２</td>
+          <td><input type="radio" name="radio3" value="3">：選択肢３</td>
+        </tr>
+      </table>
+    </div>
+
+    <h2>Consoleに貼るJavaScript</h2>
+    このスクリプトをConsoleに貼るとラジオが押しやすくなる<br>
+    <textarea readonly cols="100" rows="13">
+
+for( const r of document.querySelectorAll('input[type="radio"]') ){
+  //ここはparentでいいのかはHTMLの構造による。parentNode.parentNodeのほうがいいこともある。
+  const td = r.parentNode;
+  
+  td.addEventListener('click', function(){
+      r.click();
+  });
+  td.addEventListener('mouseover',function(){td.style.backgroundColor='#5F6F94'});
+  td.addEventListener('mouseleave',function(){td.style.backgroundColor='#FFFFFF'});
+}      
+    </textarea>
+  </body>
+</html>
