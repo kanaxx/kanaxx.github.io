@@ -147,7 +147,10 @@ function showRakutenAffItems(){
       
       //other
       for(let n in r10Items[i]){
-        if( e = newHtml.querySelector(`[data-raku="${n}"]`) ){
+        if( e = newHtml.querySelector(`span[data-raku="${n}"]`) ){
+          if( n === 'itemPrice'){
+            r10Items[i][n] = new Number(r10Items[i][n]).toLocaleString();
+          }
           e.innerHTML = r10Items[i][n];
         }
       }
