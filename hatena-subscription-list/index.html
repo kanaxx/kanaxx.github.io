@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>はてなブログ購読リストを読みやすく</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+
+<body style="margin:20px">
+    <h1>はてなブログの購読リストを読みやすくするプログラムをインストールするページ</h1>
+    以下のリンクをマウスでクリックしたまま、ブックマークバーに持っていく！<br>
+    <a id="link" type="button" class="btn btn-outline-primary" href="">購読リスト！</a>
+
+    <hr>
+    <a href="https://kanaxx.hatenablog.jp/entry/hatena-subscription-list">はてなブログの購読リストが使いにくい！120行のスクリプトでサクッときれいにする</a>
+
+<textarea id="src" style="display:none">
+'use strict';(async function(d,b){function m(a){a=$('a.x_x[data-opened="0"]').length;$("span#x_x_remains").text(a)}function k(a){$("h1.antenna-heading").text("\u8cfc\u8aad\u30ea\u30b9\u30c8\uff1a"+a)}function p(a){var c=$(a);a=c.find("a.entry-unit-blog-name").text().trim();var g=c.find("div.entry-unit-content h3.entry-unit-entry-title > a");const q=g.text().trim();g=g.attr("href");var h=c.find("div.entry-unit-content div.entry-unit-entry-footer time.entry-unit-post-time");const n=h.attr("datetime"),
+r=(new Date(n)).toLocaleString();h=h.text();c=c.find("img.subscribed-list-icon").attr("src");return{blogname:a,title:q,link:g,utctime:n,jsttime:r,diff:h,img:c}}async function t(a){return await (await fetch(a)).text()}var e=5;let l=5;Number.isInteger(d)&&(e=d);Number.isInteger(b)&&(l=b);if(0!=window.location.href.indexOf("https://blog.hatena.ne.jp/-/antenna"))alert("\u30da\u30fc\u30b8\u304c\u9055\u3044\u307e\u3059\u3002\u8cfc\u8aad\u30ea\u30b9\u30c8\u3078\u79fb\u52d5\u3057\u307e\u3059"),window.location.href=
+"https://blog.hatena.ne.jp/-/antenna";else{$("div.l-admin-subscribe-wrapper-left").remove();$("div.l-admin-subscribe-wrapper-right").remove();d=[];for(b=1;b<=e;b++){console.info("page:%s",b);k(`${b}/${e} \u30da\u30fc\u30b8\u76ee`);var f=await t("https://blog.hatena.ne.jp/-/antenna?page="+b);f=$(f).find("li.subscribed-list-list");console.log("li count = %s",f.length);for(let a=0;a<f.length;a++)d.push(f[a])}k("\u30ea\u30b9\u30c8\u4f5c\u6210\u4e2d...");console.info("blog count = %s",d.length);e="";for(let a in d)b=
+p(d[a]),console.log(b),e+=`<div style="display: flex;">
+<div style="width:60px;">
+<img src="${b.img}" width="48" >
+</div>
+<div style="margin-bottom:10px; width: calc(100% - 60px);">
+<span style="font-size:115%; font-weight:bold">${b.blogname}</span><br>
+<a href="${b.link}" target="_blank" rel="noopener noreferrer" class="x_x" data-opened="0">${b.title}</a> ${b.jsttime}
+</div>
+</div>`;k(d.length);$("div.l-admin-subscribe-wrapper").append(e);$("nav.service-nav-actions").prepend(`<button class="service-nav-action-item action-item-edit" id="x_x_open">${l}\u500b\u306e\u30ea\u30f3\u30af\u3092\u958b\u304f
+<span class="badge badge-new" id="x_x_remains"></span>
+</button>`);$("#x_x_open").on("click",function(){let a=$('a.x_x[data-opened="0"]');for(let c=0;c<a.length&&c<l;c++)a[c].dataset.opened="1",a[c].textContent="\u2705"+a[c].textContent,window.open(a[c].href);m()});m()}})();
+</textarea>
+        
+</body>
+<script>
+    var data = document.getElementById('src').value;
+    var a = document.getElementById('link');
+    a.href='javascript:'+data;
+</script>
+
+</html>
