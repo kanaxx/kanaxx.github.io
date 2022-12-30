@@ -9,7 +9,7 @@ const rakutenAffConfig = {
 
 let r10AffConfig = null;
 let r10AffParts = null;
-const r10ApiUrl = 'https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&formatVersion=2&period=realtime';
+const r10ApiUrl = 'https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&formatVersion=2';
 
 setRakutenAff();
 showRakutenAffItems();
@@ -35,6 +35,7 @@ function makeApiConfig(conf){
     f(conf, 'applicationId');
     f(conf, 'affiliateId');
     f(conf, 'display');
+    f(conf, 'period');
   }
 }
 
