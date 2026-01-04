@@ -127,6 +127,9 @@ function showRakutenAffItems(){
 
     let insertNode = itemHtml;
     const r10Items = response.Items;
+    if(r10Items.length!=0 && r10Items[0].rank!=1){
+      r10Items.reverse();
+    }
     
     if(lastBuild = response['lastBuildDate']){
       if( e = r10AffParts.querySelector('[data-raku="lastBuildDate"]') ){
@@ -186,3 +189,4 @@ function showRakutenAffItems(){
     console.info('RakutenAff - end.')
   }); 
 }
+
