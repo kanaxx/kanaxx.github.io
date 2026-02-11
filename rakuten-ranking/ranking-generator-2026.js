@@ -34,6 +34,7 @@ function makeApiConfig(conf){
         conf[p] = input.value;
       }
     };
+    f(conf, 'accessKey');
     f(conf, 'genreId');
     f(conf, 'applicationId');
     f(conf, 'affiliateId');
