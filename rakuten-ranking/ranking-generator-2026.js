@@ -11,7 +11,7 @@ const rakutenAffConfig = {
 let r10AffConfig = null;
 let r10AffParts = null;
 //const r10ApiUrl = 'https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&formatVersion=2';
-const r10ApiUrl = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20220601?format=json&formatVersion=2';
+const r10ApiUrl = 'https://openapi.rakuten.co.jp/ichibaranking/api/IchibaItem/Ranking/20220601?format=json&formatVersion=2';
 
 
 setRakutenAff();
