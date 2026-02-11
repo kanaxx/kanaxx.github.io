@@ -1,15 +1,16 @@
 // author:kanaxx.
 // see also: https://kanaxx.hatenablog.jp/entry/realtime-ranking-parts
 const rakutenAffConfig = {
+  accessKey : 'pk_6Jyz6NRSBWUBjsb6LCrNMI1McyYpd2jjU82sArhfos5',
   affiliateId : "04021205.0d23044c.04021206.437bb859",
-  applicationId : "1027300763038019149",
+  applicationId : "f9f7ba2d-eff5-468c-8771-371daef1e0aa",
   display : 10,
   genreId:0,
 }
 
 let r10AffConfig = null;
 let r10AffParts = null;
-const r10ApiUrl = 'https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&formatVersion=2';
+const r10ApiUrl = 'https://openapi.rakuten.co.jp/ichibaranking/api/IchibaItem/Ranking/20220601?format=json&formatVersion=2';
 
 setRakutenAff();
 showRakutenAffItems();
@@ -31,6 +32,7 @@ function makeApiConfig(conf){
         conf[p] = input.value;
       }
     };
+    f(conf, 'accessKey');
     f(conf, 'genreId');
     f(conf, 'applicationId');
     f(conf, 'affiliateId');
@@ -189,4 +191,3 @@ function showRakutenAffItems(){
     console.info('RakutenAff - end.')
   }); 
 }
-
