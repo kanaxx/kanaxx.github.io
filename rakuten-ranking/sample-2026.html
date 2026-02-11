@@ -1,0 +1,44 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+  <title>データ取得サンプル</title>
+</head>
+<body>
+  <h1>リアルタイムランキングを取得するサンプル</h1>
+  
+  <div id="rakuten-aff-parts">
+    <h3>楽天市場のリアルタイムランキング</h3>
+    ランキング更新日：<b data-raku="lastBuildDate"></b><br>
+
+    <div class="rakuten-aff-item" >
+      <h2>順位：<span data-raku="rank"></span> 位</span></h2>
+      <img src="" data-raku="mediumImageUrls"><img src="" data-raku="smallImageUrls">
+      <li>価格：<span data-raku="itemPrice"></span> 円</li>
+
+      <li>ポイント倍率：<span data-raku="pointRate"></span>倍</li>
+      <li>商品名：<span data-raku="itemName"></span></li>
+      <li>商品URL：<a data-raku="itemUrl"><span data-raku="itemUrl"></span></a> </li>
+      
+      <li>商品コード：<span data-raku="itemCode"></span></li>
+      <li>レビュー数：<span data-raku="reviewCount"></span></li>
+      <li>レビュー平均点：<span data-raku="reviewAverage"></span> </li>
+      <li>ショップコード：<span data-raku="shopCode"></span></li>
+      <li>ショップURL：<a data-raku="shopUrl"><span data-raku="shopUrl"></span></a> </li>
+    </div>
+
+    フッター部分
+  </div>
+
+  <div id="rakuten-aff-config">
+    <input type="hidden" name="accessKey" value="pk_6Jyz6NRSBWUBjsb6LCrNMI1McyYpd2jjU82sArhfos5"> 
+    <input type="hidden" name="applicationId" value="f9f7ba2d-eff5-468c-8771-371daef1e0aa"> 
+    <input type="hidden" name="affiliateId" value="04021205.0d23044c.04021206.437bb859">
+    <input type="hidden" name="genreId" value="100316">
+    <input type="hidden" name="display" value="30">
+  </div>
+
+</body>
+
+<script src="./ranking-generator-2026.js"></script>
+
+</html>
