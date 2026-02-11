@@ -10,9 +10,7 @@ const rakutenAffConfig = {
 
 let r10AffConfig = null;
 let r10AffParts = null;
-//const r10ApiUrl = 'https://app.rakuten.co.jp/services/api/IchibaItem/Ranking/20170628?format=json&formatVersion=2';
 const r10ApiUrl = 'https://openapi.rakuten.co.jp/ichibaranking/api/IchibaItem/Ranking/20220601?format=json&formatVersion=2';
-
 
 setRakutenAff();
 showRakutenAffItems();
@@ -40,6 +38,7 @@ function makeApiConfig(conf){
     f(conf, 'affiliateId');
     f(conf, 'display');
     f(conf, 'period');
+    f(conf, 'keisokuId');
   }
 }
 
@@ -74,8 +73,19 @@ function checkRakutenAffItemsArea(trigger){
 
 function formatDate(datetime){
   const d = new Date(datetime);
-  const formatted_date = d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes() ;
-  return formatted_date;
+  return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() +'日';
+}
+function formatDateTime(datetime){
+  const d = new Date(datetime);
+  return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() +'日 ' +  d.getHours() + ":" + d.getMinutes() ;
+}
+function getUrlWithKeisokuId(url, id){
+  let u = url.split('?');
+  if(!id || u.length!=2){
+    return url;
+  }
+
+  return u[0] + id + '?' + u[1];
 }
 
 function showRakutenAffItems(){
@@ -125,7 +135,11 @@ function showRakutenAffItems(){
     
     if(lastBuild = response['lastBuildDate']){
       if( e = r10AffParts.querySelector('[data-raku="lastBuildDate"]') ){
-        e.innerHTML = formatDate(lastBuild);
+        if( rakutenAffConfig['period'] === 'realtime' ){
+          e.innerHTML = formatDateTime(lastBuild);
+        }else{
+          e.innerHTML = formatDate(lastBuild);
+        }
       }
     }
 
@@ -134,10 +148,12 @@ function showRakutenAffItems(){
       let e = null;
 
       //link
-      ['affiliateUrl','itemUrl','shopUrl'].forEach(n=>{
-        if(href = r10Items[i][n]){
+      ['affiliateUrl','itemUrl','shopAffiliateUrl', 'shopUrl'].forEach(n=>{
+        if(value = r10Items[i][n]){
+          url = getUrlWithKeisokuId(value, rakutenAffConfig['keisokuId']);
+          r10Items[i][n]=url;
           if( e = newHtml.querySelector(`a[data-raku="${n}"]`) ){
-            e.setAttribute('href', href);
+            e.setAttribute('href', url);
             e.dataset.raku=`_${n}`;
           }
         }
@@ -145,9 +161,9 @@ function showRakutenAffItems(){
       
       //img
       ['mediumImageUrls','smallImageUrls'].forEach(n=>{
-        if(src = r10Items[i][n]){
+        if(value = r10Items[i][n]){
           if( e = newHtml.querySelector(`img[data-raku="${n}"]`)){
-            e.setAttribute('src', src[0]);
+            e.setAttribute('src', value[0]);
             e.dataset.raku=`_${n}`;
           }
         }
